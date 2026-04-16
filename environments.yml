@@ -8,7 +8,11 @@ dependencies:
   - numpy
   - pandas
   - scikit-learn
+  - tensorflow
   - jupyterlab
   - pip
   - pip:
       - scikit-surprise
+      - onnx
+      - onnxruntime
+      - tf2onnx

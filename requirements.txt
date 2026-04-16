@@ -1,5 +1,8 @@
-pandas 
-numpy 
-scikit-learn 
-jupyterlab 
-scikit-surprise
+pandas
+numpy
+tensorflow
+scikit-learn
+onnx
+onnxruntime
+tf2onnx
+jupyter
