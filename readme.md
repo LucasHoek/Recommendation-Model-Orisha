@@ -4,7 +4,6 @@ In deze branch bevindt zich de uiteindelijke prototype van het Recommendation mo
 In totaal bestaat het recommendation model uit twee onderdelen: 
 ### 1: het trainingsproces (Train.py)
 Het trainingsproces is het proces van ophalen, trainen van een model en het uiteindelijk opslaan van een functioneel model dat voorspellingen kan maken. 
-Er w
 ### 2: het recommendation model (Recommendation.py)
 Hierin bevindt zich het proces van het ontvangen van een request om een aanbeveling te maken en het terugsturen van een ranglijst van producten. 
 
