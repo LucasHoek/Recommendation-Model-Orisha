@@ -1,1 +1,48 @@
-    
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Customer Advice</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 24px; max-width: 900px; }
+    .back {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px; border-radius:6px; border:1px solid #e6e6e6;
+      background:#fff; color:#1a73e8; text-decoration:none; cursor:pointer; font-weight:600;
+    }
+    .card { border:1px solid #e6e6e6; padding:16px; border-radius:8px; background:#fff; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <button id="backBtn" class="back" aria-label="Back to sales reps list">← Back to Sales Reps</button>
+
+  <div id="content" class="card" role="region" aria-live="polite">
+    <div id="info">This page only provides a back button to return to the sales reps list.</div>
+  </div>
+
+  <script>
+    document.getElementById('backBtn').addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+        setTimeout(() => {
+          if (document.visibilityState === 'visible') {
+            window.location.href = '/';
+          }
+        }, 200);
+      } else {
+        window.location.href = '/';
+      }
+    });
+
+    (function showSalesRep() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('salesrep');
+      if (id) {
+        const info = document.getElementById('info');
+        info.textContent = 'Sales Rep ID: ' + id + '. Use the Back button to return to the sales reps list.';
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Sales Reps</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 24px; }
+    .list { max-width: 420px; padding: 0; margin: 0; list-style: none; border:1px solid #e6e6e6; border-radius:6px; overflow:hidden; }
+    .list li { padding: 12px 16px; border-bottom: 1px solid #f2f2f2; background:#fff; }
+    .list li:last-child { border-bottom: none; }
+    .list a { color: #1a73e8; text-decoration: none; display:block; width:100%; }
+    .list a:hover { background:#f6f9ff; }
+    h3 { margin-bottom: 8px; }
+    .small { color:#666; font-size:0.9rem; margin-bottom:12px; }
+    .meta { color:#444; font-size:0.95rem; margin-top:6px; }
+  </style>
+</head>
+<body>
+  <h3>Sales Reps</h3>
+  <p class="small">Click a sales rep to open the advice page. Data is loaded from <code>/api/data</code>.</p>
+
+  <ul id="salesrep-list" class="list" aria-label="Sales rep list">
+    <li>Loading…</li>
+  </ul>
+
+  <script>
+    async function renderSalesReps() {
+      try {
+        const res = await fetch('/api/data');
+        if (!res.ok) throw new Error('Failed to fetch data');
+        const data = await res.json();
+
+        // Prefer using SalesReps from JSON; if missing, fall back to IDs 500..520
+        const reps = (data.SalesReps && data.SalesReps.length)
+          ? data.SalesReps.map(s => ({ id: s.salesrep_id, customer_id: s.customer_id }))
+          : Array.from({length:21}, (_,i) => ({ id: 500 + i, customer_id: '' }));
+
+        // Remove duplicates and sort by id
+        const unique = [];
+        const seen = new Set();
+        reps.forEach(r => {
+          if (!seen.has(r.id)) {
+            seen.add(r.id);
+            unique.push(r);
+          }
+        });
+        unique.sort((a,b) => a.id - b.id);
+
+        const ul = document.getElementById('salesrep-list');
+        ul.innerHTML = '';
+
+        unique.forEach(r => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = '/customeradvice?salesrep=' + encodeURIComponent(r.id);
+          a.textContent = 'Sales Rep ' + r.id;
+          a.setAttribute('aria-label', 'Open advice for sales rep ' + r.id);
+
+          const meta = document.createElement('div');
+          meta.className = 'meta';
+          meta.textContent = r.customer_id ? 'Assigned customer: ' + r.customer_id : 'No assigned customer';
+
+          li.appendChild(a);
+          li.appendChild(meta);
+          ul.appendChild(li);
+        });
+
+        if (unique.length === 0) {
+          ul.innerHTML = '<li>No sales reps found.</li>';
+        }
+      } catch (err) {
+        const ul = document.getElementById('salesrep-list');
+        ul.innerHTML = '<li>Error loading sales reps: ' + err.message + '</li>';
+        console.error(err);
+      }
+    }
+
+    renderSalesReps();
+  </script>
+</body>
+</html>
