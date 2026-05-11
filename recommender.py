@@ -31,93 +31,19 @@ def _coerce_extension_string_dtypes_to_object(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def safe_load_interactions(path: Path):
-    """
-    Try multiple strategies to load interactions_df:
-      1) joblib.load
-      2) pandas.read_pickle
-      3) raw pickle.load
-      4) try decompressing gzip/bz2/lzma then unpickle
-      5) raise a helpful error if none succeed
-
-    Returns a pandas.DataFrame on success.
-    """
     p = Path(path)
     if not p.exists():
         raise FileNotFoundError(f"{p} not found")
 
-    # 1) joblib.load
     try:
         obj = joblib.load(p)
-        if isinstance(obj, pd.DataFrame):
-            return _coerce_extension_string_dtypes_to_object(obj)
-        return obj
-    except Exception:
-        pass
+    except Exception as e:
+        raise RuntimeError(f"joblib.load failed for {p}: {e}") from e
 
-    # 2) pandas.read_pickle
-    try:
-        obj = pd.read_pickle(p, compression=None)
-        if isinstance(obj, pd.DataFrame):
-            return _coerce_extension_string_dtypes_to_object(obj)
-        return obj
-    except Exception:
-        pass
+    if isinstance(obj, pd.DataFrame):
+        return _coerce_extension_string_dtypes_to_object(obj)
+    return obj
 
-    # 3) raw pickle.load
-    try:
-        with p.open("rb") as f:
-            obj = pickle.load(f)
-        if isinstance(obj, pd.DataFrame):
-            return _coerce_extension_string_dtypes_to_object(obj)
-        return obj
-    except Exception:
-        pass
-
-    # 4) try common compression wrappers (gzip, bz2, lzma)
-    raw = p.read_bytes()
-    decompressors = [("gzip", gzip.decompress), ("bz2", bz2.decompress), ("lzma", lzma.decompress)]
-    for name, decomp in decompressors:
-        try:
-            decompressed = decomp(raw)
-            try:
-                obj = pickle.loads(decompressed)
-                if isinstance(obj, pd.DataFrame):
-                    return _coerce_extension_string_dtypes_to_object(obj)
-                return obj
-            except Exception:
-                # try pandas on BytesIO
-                try:
-                    obj = pd.read_pickle(io.BytesIO(decompressed), compression=None)
-                    if isinstance(obj, pd.DataFrame):
-                        return _coerce_extension_string_dtypes_to_object(obj)
-                    return obj
-                except Exception:
-                    pass
-        except Exception:
-            pass
-
-    # 5) try numpy load (in case it's an npz/npy)
-    try:
-        arr = np.load(io.BytesIO(raw), allow_pickle=True)
-        # If it's an array-like that can be converted to DataFrame, try that
-        try:
-            df = pd.DataFrame(arr)
-            return _coerce_extension_string_dtypes_to_object(df)
-        except Exception:
-            return arr
-    except Exception:
-        pass
-
-    # If we reach here, provide a helpful error with header bytes
-    head = raw[:8]
-    hdr = " ".join(f"{b:02x}" for b in head)
-    raise RuntimeError(
-        f"Unable to load interactions file {p}. First bytes: {hdr}. "
-        "Tried joblib.load, pandas.read_pickle, pickle.load, gzip/bz2/lzma decompression, and numpy.load. "
-        "File may be corrupted or saved with an unsupported format. "
-        "If possible, re-save the DataFrame as Parquet (df.to_parquet) and place it at "
-        f"{p.with_suffix('.parquet')} for robust loading."
-    )
 
 # -------------------------
 # Artifact loading (uses safe loader)
@@ -185,9 +111,7 @@ def load_artifacts(artifacts_dir=ARTIFACTS_DIR, onnx_providers=None):
         "cf_model": cf_model,
     }
 
-# -------------------------
-# The rest of your helper functions remain unchanged
-# -------------------------
+
 def _build_all_item_indices(cf_item_id_map):
     return np.arange(len(cf_item_id_map), dtype=np.int32)
 
