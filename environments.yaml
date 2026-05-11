@@ -11,6 +11,7 @@ dependencies:
   - tensorflow
   - jupyterlab
   - pip
+  - nodejs
   - pip:
       - scikit-surprise
       - onnx
