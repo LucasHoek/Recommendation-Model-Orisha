@@ -1,4 +1,3 @@
-# recommender.py (updated)
 import os
 import pickle
 import joblib
@@ -8,7 +7,11 @@ import numpy as np
 from sklearn.metrics.pairwise import linear_kernel
 import onnxruntime as ort
 import pandas as pd
-import gzip, bz2, lzma, io
+import io
+import pickle
+import gzip
+import bz2
+import lzma
 
 ARTIFACTS_DIR = Path("artifacts")
 
@@ -22,11 +25,9 @@ def _coerce_extension_string_dtypes_to_object(df: pd.DataFrame) -> pd.DataFrame:
     """
     for col in df.columns:
         try:
-            # If it's an extension string dtype or object-like, coerce to object
             if pd.api.types.is_string_dtype(df[col].dtype) or pd.api.types.is_object_dtype(df[col].dtype):
                 df[col] = df[col].astype("object")
         except Exception:
-            # If dtype checks fail for any reason, coerce anyway
             df[col] = df[col].astype("object")
     return df
 
@@ -35,16 +36,84 @@ def safe_load_interactions(path: Path):
     if not p.exists():
         raise FileNotFoundError(f"{p} not found")
 
+    # 1) joblib.load
     try:
         obj = joblib.load(p)
-    except Exception as e:
-        raise RuntimeError(f"joblib.load failed for {p}: {e}") from e
+        if isinstance(obj, pd.DataFrame):
+            return _coerce_extension_string_dtypes_to_object(obj)
+        return obj
+    except Exception:
+        pass
 
-    if isinstance(obj, pd.DataFrame):
-        return _coerce_extension_string_dtypes_to_object(obj)
-    return obj
+    # 2) pandas.read_pickle
+    try:
+        obj = pd.read_pickle(p, compression=None)
+        if isinstance(obj, pd.DataFrame):
+            return _coerce_extension_string_dtypes_to_object(obj)
+        return obj
+    except Exception:
+        pass
 
+    # 3) raw pickle.load
+    try:
+        with p.open("rb") as f:
+            obj = pickle.load(f)
+        if isinstance(obj, pd.DataFrame):
+            return _coerce_extension_string_dtypes_to_object(obj)
+        return obj
+    except Exception:
+        pass
 
+    # 4) try common compression wrappers
+    raw = p.read_bytes()
+    decompressors = [
+        ("gzip", gzip.decompress),
+        ("bz2", bz2.decompress),
+        ("lzma", lzma.decompress),
+    ]
+
+    for name, decomp in decompressors:
+        try:
+            decompressed = decomp(raw)
+        except Exception:
+            continue
+
+        # try pickle.loads first
+        try:
+            obj = pickle.loads(decompressed)
+            if isinstance(obj, pd.DataFrame):
+                return _coerce_extension_string_dtypes_to_object(obj)
+            return obj
+        except Exception:
+            pass
+
+        # then try pandas read_pickle from bytes buffer
+        try:
+            obj = pd.read_pickle(io.BytesIO(decompressed), compression=None)
+            if isinstance(obj, pd.DataFrame):
+                return _coerce_extension_string_dtypes_to_object(obj)
+            return obj
+        except Exception:
+            pass
+
+    # 5) numpy load
+    try:
+        arr = np.load(io.BytesIO(raw), allow_pickle=True)
+        try:
+            df = pd.DataFrame(arr)
+            return _coerce_extension_string_dtypes_to_object(df)
+        except Exception:
+            return arr
+    except Exception:
+        pass
+
+    head = raw[:8]
+    hdr = " ".join(f"{b:02x}" for b in head)
+    raise RuntimeError(
+        f"Unable to load interactions file {p}. First bytes: {hdr}. "
+        "Tried joblib.load, pandas.read_pickle, pickle.load, gzip/bz2/lzma decompression, and numpy.load. "
+        "File may be corrupted or saved with an unsupported format."
+    )
 # -------------------------
 # Artifact loading (uses safe loader)
 # -------------------------
@@ -60,7 +129,7 @@ def load_artifacts(artifacts_dir=ARTIFACTS_DIR, onnx_providers=None):
     with open(artifacts_dir / "cf_item_id_map.pkl", "rb") as f:
         cf_item_id_map = pickle.load(f)
 
-    # interactions_df: prefer Parquet if present (more robust across pandas versions)
+    # interactions_df: prefer Parquet if present
     parquet_path = artifacts_dir / "interactions_df.parquet"
     joblib_path = artifacts_dir / "interactions_df.joblib"
     if parquet_path.exists():
@@ -71,7 +140,7 @@ def load_artifacts(artifacts_dir=ARTIFACTS_DIR, onnx_providers=None):
     else:
         raise FileNotFoundError("No interactions_df.parquet or interactions_df.joblib found in artifacts directory")
 
-    # other artifacts (try joblib, fall back to pickle where appropriate)
+    # other artifacts
     try:
         items_full = joblib.load(artifacts_dir / "items_full.joblib")
     except Exception:
@@ -111,7 +180,9 @@ def load_artifacts(artifacts_dir=ARTIFACTS_DIR, onnx_providers=None):
         "cf_model": cf_model,
     }
 
-
+# -------------------------
+# The rest of your helper functions remain unchanged
+# -------------------------
 def _build_all_item_indices(cf_item_id_map):
     return np.arange(len(cf_item_id_map), dtype=np.int32)
 
