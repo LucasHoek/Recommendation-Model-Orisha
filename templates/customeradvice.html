@@ -26,14 +26,13 @@
   <p>Top {{ recommendations|length }} recommendations:</p>
   <table>
     <thead>
-      <tr><th>Rank</th><th>Item</th><th>Score</th></tr>
+      <tr><th>Rank</th><th>Item</th></tr>
     </thead>
     <tbody>
       {% for rec in recommendations %}
         <tr>
           <td>{{ loop.index }}</td>
           <td>{{ rec.item_name }}</td>
-          <td>{{ "%.4f"|format(rec.score) }}</td>
         </tr>
       {% endfor %}
     </tbody>
