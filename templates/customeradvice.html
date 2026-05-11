@@ -12,37 +12,39 @@
       background:#fff; color:#1a73e8; text-decoration:none; cursor:pointer; font-weight:600;
     }
     .card { border:1px solid #e6e6e6; padding:16px; border-radius:8px; background:#fff; margin-top:12px; }
+    table { border-collapse: collapse; width: 100%; margin-top:12px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
   </style>
 </head>
 <body>
-  <button id="backBtn" class="back" aria-label="Back to sales reps list">← Back to Sales Reps</button>
-
-  <div id="content" class="card" role="region" aria-live="polite">
-    <div id="info">This page only provides a back button to return to the sales reps list.</div>
+  <a class="back" href="/" aria-label="Back to sales reps list">← Back to Sales Reps</a>
+  <div class="card" role="region" aria-live="polite">
+    {% if salesrep_id %}
+      <h3>Recommendations for Sales Rep {{ salesrep_id }}</h3>
+      {% if recommendations %}
+  <p>Top {{ recommendations|length }} recommendations:</p>
+  <table>
+    <thead>
+      <tr><th>Rank</th><th>Item</th><th>Score</th></tr>
+    </thead>
+    <tbody>
+      {% for rec in recommendations %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ rec.item_name }}</td>
+          <td>{{ "%.4f"|format(rec.score) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No recommendations available for this sales rep.</p>
+{% endif %}
+    {% else %}
+      <h3>No Sales Rep Selected</h3>
+      <p>Click a sales rep from the list to generate recommendations.</p>
+    {% endif %}
   </div>
-
-  <script>
-    document.getElementById('backBtn').addEventListener('click', () => {
-      if (window.history.length > 1) {
-        window.history.back();
-        setTimeout(() => {
-          if (document.visibilityState === 'visible') {
-            window.location.href = '/';
-          }
-        }, 200);
-      } else {
-        window.location.href = '/';
-      }
-    });
-
-    (function showSalesRep() {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('salesrep');
-      if (id) {
-        const info = document.getElementById('info');
-        info.textContent = 'Sales Rep ID: ' + id + '. Use the Back button to return to the sales reps list.';
-      }
-    })();
-  </script>
 </body>
 </html>
