@@ -1,319 +1,189 @@
 import os
-import pickle
 import joblib
-from pathlib import Path
-from scipy import sparse
 import numpy as np
+from scipy import sparse
 from sklearn.metrics.pairwise import linear_kernel
 import onnxruntime as ort
-import pandas as pd
-import io
-import pickle
-import gzip
-import bz2
-import lzma
 
-ARTIFACTS_DIR = Path("artifacts")
 
-# -------------------------
-# Robust loader for interactions_df
-# -------------------------
-def _coerce_extension_string_dtypes_to_object(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Convert extension string dtypes (and other problematic extension dtypes)
-    to plain object dtype so downstream code can operate without dtype constructor errors.
-    """
-    for col in df.columns:
-        try:
-            if pd.api.types.is_string_dtype(df[col].dtype) or pd.api.types.is_object_dtype(df[col].dtype):
-                df[col] = df[col].astype("object")
-        except Exception:
-            df[col] = df[col].astype("object")
-    return df
-
-def safe_load_interactions(path: Path):
-    p = Path(path)
-    if not p.exists():
-        raise FileNotFoundError(f"{p} not found")
-
-    # 1) joblib.load
-    try:
-        obj = joblib.load(p)
-        if isinstance(obj, pd.DataFrame):
-            return _coerce_extension_string_dtypes_to_object(obj)
-        return obj
-    except Exception:
-        pass
-
-    # 2) pandas.read_pickle
-    try:
-        obj = pd.read_pickle(p, compression=None)
-        if isinstance(obj, pd.DataFrame):
-            return _coerce_extension_string_dtypes_to_object(obj)
-        return obj
-    except Exception:
-        pass
-
-    # 3) raw pickle.load
-    try:
-        with p.open("rb") as f:
-            obj = pickle.load(f)
-        if isinstance(obj, pd.DataFrame):
-            return _coerce_extension_string_dtypes_to_object(obj)
-        return obj
-    except Exception:
-        pass
-
-    # 4) try common compression wrappers
-    raw = p.read_bytes()
-    decompressors = [
-        ("gzip", gzip.decompress),
-        ("bz2", bz2.decompress),
-        ("lzma", lzma.decompress),
-    ]
-
-    for name, decomp in decompressors:
-        try:
-            decompressed = decomp(raw)
-        except Exception:
-            continue
-
-        # try pickle.loads first
-        try:
-            obj = pickle.loads(decompressed)
-            if isinstance(obj, pd.DataFrame):
-                return _coerce_extension_string_dtypes_to_object(obj)
-            return obj
-        except Exception:
-            pass
-
-        # then try pandas read_pickle from bytes buffer
-        try:
-            obj = pd.read_pickle(io.BytesIO(decompressed), compression=None)
-            if isinstance(obj, pd.DataFrame):
-                return _coerce_extension_string_dtypes_to_object(obj)
-            return obj
-        except Exception:
-            pass
-
-    # 5) numpy load
-    try:
-        arr = np.load(io.BytesIO(raw), allow_pickle=True)
-        try:
-            df = pd.DataFrame(arr)
-            return _coerce_extension_string_dtypes_to_object(df)
-        except Exception:
-            return arr
-    except Exception:
-        pass
-
-    head = raw[:8]
-    hdr = " ".join(f"{b:02x}" for b in head)
-    raise RuntimeError(
-        f"Unable to load interactions file {p}. First bytes: {hdr}. "
-        "Tried joblib.load, pandas.read_pickle, pickle.load, gzip/bz2/lzma decompression, and numpy.load. "
-        "File may be corrupted or saved with an unsupported format."
-    )
-# -------------------------
-# Artifact loading (uses safe loader)
-# -------------------------
-def load_artifacts(artifacts_dir=ARTIFACTS_DIR, onnx_providers=None):
+# ---------------------------------------------------------
+# Load all artifacts (ONCE at startup)
+# ---------------------------------------------------------
+def load_artifacts(artifacts_dir, onnx_providers=None):
     if onnx_providers is None:
         onnx_providers = ["CPUExecutionProvider"]
 
-    artifacts_dir = Path(artifacts_dir)
+    # Encoders & data
+    print("Loading user_encoder")
+    user_encoder = joblib.load(os.path.join(artifacts_dir, "user_encoder.joblib"))
+    print("Loading item_encoder")
+    item_encoder = joblib.load(os.path.join(artifacts_dir, "item_encoder.joblib"))
+    print("Loading interactions_df")
+    interactions_df = joblib.load(os.path.join(artifacts_dir, "interactions_df.joblib"))
+    print("Loading item_meta")
+    item_meta = joblib.load(os.path.join(artifacts_dir, "item_meta.joblib"))
+    tfidf = joblib.load(os.path.join(artifacts_dir, "tfidf_vectorizer.joblib"))
+    tfidf_matrix = sparse.load_npz(os.path.join(artifacts_dir, "tfidf_matrix.npz"))
 
-    # required maps
-    with open(artifacts_dir / "cf_user_id_map.pkl", "rb") as f:
-        cf_user_id_map = pickle.load(f)
-    with open(artifacts_dir / "cf_item_id_map.pkl", "rb") as f:
-        cf_item_id_map = pickle.load(f)
-
-    # interactions_df: prefer Parquet if present
-    parquet_path = artifacts_dir / "interactions_df.parquet"
-    joblib_path = artifacts_dir / "interactions_df.joblib"
-    if parquet_path.exists():
-        interactions_df = pd.read_parquet(parquet_path)
-        interactions_df = _coerce_extension_string_dtypes_to_object(interactions_df)
-    elif joblib_path.exists():
-        interactions_df = safe_load_interactions(joblib_path)
-    else:
-        raise FileNotFoundError("No interactions_df.parquet or interactions_df.joblib found in artifacts directory")
-
-    # other artifacts
-    try:
-        items_full = joblib.load(artifacts_dir / "items_full.joblib")
-    except Exception:
-        with open(artifacts_dir / "items_full.joblib", "rb") as f:
-            items_full = pickle.load(f)
-
-    try:
-        tfidf = joblib.load(artifacts_dir / "tfidf_vectorizer.joblib")
-    except Exception:
-        with open(artifacts_dir / "tfidf_vectorizer.joblib", "rb") as f:
-            tfidf = pickle.load(f)
-
-    tfidf_matrix = sparse.load_npz(artifacts_dir / "tfidf_matrix.npz")
-
-    with open(artifacts_dir / "item_idx_to_id.pkl", "rb") as f:
-        item_idx_to_id = pickle.load(f)
-    with open(artifacts_dir / "user_idx_to_id.pkl", "rb") as f:
-        user_idx_to_id = pickle.load(f)
-
-    # ONNX session if path saved
+    # ONNX model
     cf_model = None
-    onnx_path_joblib = artifacts_dir / "ncf_model_path.joblib"
-    if onnx_path_joblib.exists():
-        onnx_path = joblib.load(onnx_path_joblib)
+    onnx_path_file = os.path.join(artifacts_dir, "ncf_model_path.joblib")
+
+    if os.path.exists(onnx_path_file):
+        onnx_path = joblib.load(onnx_path_file)
         if os.path.exists(onnx_path):
             cf_model = ort.InferenceSession(onnx_path, providers=onnx_providers)
 
     return {
-        "cf_user_id_map": cf_user_id_map,
-        "cf_item_id_map": cf_item_id_map,
+        "user_encoder": user_encoder,
+        "item_encoder": item_encoder,
         "interactions_df": interactions_df,
-        "items_full": items_full,
+        "item_meta": item_meta,
         "tfidf": tfidf,
         "tfidf_matrix": tfidf_matrix,
-        "item_idx_to_id": item_idx_to_id,
-        "user_idx_to_id": user_idx_to_id,
         "cf_model": cf_model,
     }
 
-# -------------------------
-# The rest of your helper functions remain unchanged
-# -------------------------
-def _build_all_item_indices(cf_item_id_map):
-    return np.arange(len(cf_item_id_map), dtype=np.int32)
 
+# ---------------------------------------------------------
+# Collaborative filtering scoring
+# ---------------------------------------------------------
 def cf_scores_for_user(user_idx, cf_session, item_indices):
     user_array = np.full((len(item_indices), 1), user_idx, dtype=np.int32)
     item_array = item_indices.reshape(-1, 1).astype(np.int32)
-    inputs = {}
-    for inp in cf_session.get_inputs():
-        if "user" in inp.name.lower():
-            inputs[inp.name] = user_array
-        else:
-            inputs[inp.name] = item_array
+
+    zeros = np.zeros_like(item_array)
+
+    inputs = {
+        "user_id": user_array,
+        "item_id": item_array,
+        "address_city": zeros,
+        "address_state": zeros,
+        "unit": zeros,
+        "classValue_itemClassId": zeros,
+    }
+
     preds = cf_session.run(None, inputs)[0].reshape(-1)
     return preds
 
+
 def get_cf_topn(user_id, topn, artifacts, exclude_seen=True):
-    cf_user_id_map = artifacts["cf_user_id_map"]
-    cf_item_id_map = artifacts["cf_item_id_map"]
+    user_encoder = artifacts["user_encoder"]
+    item_encoder = artifacts["item_encoder"]
     interactions_df = artifacts["interactions_df"]
-    item_idx_to_id = artifacts["item_idx_to_id"]
     cf_model = artifacts["cf_model"]
+
     if cf_model is None:
+        raise RuntimeError("ONNX model not loaded.")
+
+    if user_id not in user_encoder.classes_:
         return []
-    if user_id not in cf_user_id_map:
-        return []
-    user_idx = cf_user_id_map[user_id]
-    all_item_indices = _build_all_item_indices(cf_item_id_map)
+
+    user_idx = user_encoder.transform([user_id])[0]
+    all_item_indices = np.arange(len(item_encoder.classes_))
+
     scores = cf_scores_for_user(user_idx, cf_model, all_item_indices)
-    if exclude_seen:
-        seen = set(interactions_df[interactions_df["user_id"] == user_id]["item_idx"].tolist())
-        for s in seen:
-            if 0 <= s < len(scores):
-                scores[int(s)] = -np.inf
-    topn = min(topn, len(scores))
-    top_idx = np.argpartition(-scores, topn - 1)[:topn]
-    top_sorted = top_idx[np.argsort(-scores[top_idx])]
-    return [(artifacts["item_idx_to_id"][int(i)], float(scores[int(i)])) for i in top_sorted]
 
-def get_content_topn_by_user(user_id, topn, artifacts, exclude_seen=True):
-    interactions_df = artifacts["interactions_df"]
+    if exclude_seen:
+        seen_items = interactions_df[interactions_df["user_id"] == user_idx]["item_id"].unique()
+        for s in seen_items:
+            scores[s] = -np.inf
+
+    top_idx = np.argsort(-scores)[:topn]
+    item_ids = item_encoder.inverse_transform(top_idx)
+
+    return [(int(i), float(scores[int(i)])) for i in top_idx]
+
+
+# ---------------------------------------------------------
+# Content-based similarity
+# ---------------------------------------------------------
+def get_content_topn_by_item(item_id, topn, artifacts):
+    item_encoder = artifacts["item_encoder"]
     tfidf_matrix = artifacts["tfidf_matrix"]
-    cf_item_id_map = artifacts["cf_item_id_map"]
-    item_idx_to_id = artifacts["item_idx_to_id"]
 
-    user_interactions = interactions_df[interactions_df["user_id"] == user_id]
-    if user_interactions.empty:
-        sims = np.zeros(tfidf_matrix.shape[0], dtype=np.float32)
-    else:
-        threshold = user_interactions["rating"].mean()
-        positive = user_interactions[user_interactions["rating"] >= threshold]["item_idx"].unique()
-        if len(positive) == 0:
-            sims = np.zeros(tfidf_matrix.shape[0], dtype=np.float32)
-        else:
-            sims_list = [linear_kernel(tfidf_matrix[int(pid)], tfidf_matrix).reshape(-1) for pid in positive]
-            sims = np.mean(np.vstack(sims_list), axis=0)
+    if item_id not in item_encoder.classes_:
+        return []
 
-    if exclude_seen:
-        seen = set(user_interactions["item_idx"].tolist())
-        for s in seen:
-            if 0 <= s < len(sims):
-                sims[int(s)] = -np.inf
+    idx = item_encoder.transform([item_id])[0]
 
-    topn = min(topn, len(sims))
-    top_idx = np.argpartition(-sims, topn - 1)[:topn]
-    top_sorted = top_idx[np.argsort(-sims[top_idx])]
-    return [(item_idx_to_id[int(i)], float(sims[int(i)])) for i in top_sorted]
+    sims = linear_kernel(tfidf_matrix[idx], tfidf_matrix).reshape(-1)
+    sims[idx] = -np.inf
 
+    top_idx = np.argsort(-sims)[:topn]
+    item_ids = item_encoder.inverse_transform(top_idx)
+
+    return list(zip(item_ids, sims[top_idx]))
+
+
+# ---------------------------------------------------------
+# Hybrid recommender
+# ---------------------------------------------------------
 def get_hybrid_topn(user_id, topn, artifacts, alpha=0.6):
-    cf_user_id_map = artifacts["cf_user_id_map"]
-    cf_item_id_map = artifacts["cf_item_id_map"]
+    user_encoder = artifacts["user_encoder"]
+    item_encoder = artifacts["item_encoder"]
     interactions_df = artifacts["interactions_df"]
+    item_meta = artifacts["item_meta"]
     tfidf_matrix = artifacts["tfidf_matrix"]
-    item_idx_to_id = artifacts["item_idx_to_id"]
     cf_model = artifacts["cf_model"]
 
-    if user_id not in cf_user_id_map:
+    if user_id not in user_encoder.classes_:
         return []
+    print("1 CF score")
+    # 1. CF scores
+    cf = get_cf_topn(user_id, topn=500, artifacts=artifacts, exclude_seen=True)
+    cf_dict = {i: s for i, s in cf}
+    print("CF scores calculated")
+    # 2. Content-based expansion
+    content_scores = {}
+    print("2 Content-based")
+    for item_id, cf_score in cf:
+        sims = get_content_topn_by_item(item_id, topn=20, artifacts=artifacts)
+        for sim_item, sim_score in sims:
+            content_scores[sim_item] = content_scores.get(sim_item, 0) + sim_score
+    print("CF generated")
 
-    all_item_indices = _build_all_item_indices(cf_item_id_map)
-
-    if cf_model is not None:
-        user_idx = cf_user_id_map[user_id]
-        cf_scores = cf_scores_for_user(user_idx, cf_model, all_item_indices)
-    else:
-        cf_scores = np.zeros(len(all_item_indices), dtype=np.float32)
-
-    user_interactions = interactions_df[interactions_df["user_id"] == user_id]
-    if user_interactions.empty:
-        content_scores = np.zeros_like(cf_scores)
-    else:
-        threshold = user_interactions["rating"].mean()
-        positive = user_interactions[user_interactions["rating"] >= threshold]["item_idx"].unique()
-        if len(positive) == 0:
-            content_scores = np.zeros_like(cf_scores)
-        else:
-            sims = [linear_kernel(tfidf_matrix[int(pid)], tfidf_matrix).reshape(-1) for pid in positive]
-            content_scores = np.mean(np.vstack(sims), axis=0)
-
-    def normalize(x):
-        x = np.array(x, dtype=np.float32)
-        mn, mx = np.nanmin(x), np.nanmax(x)
+    # 3. Normalization helper
+    def norm(x):
+        print("Normalizing scores")
+        if not x:
+            return {}
+        arr = np.array(list(x.values()), dtype=np.float32)
+        mn, mx = arr.min(), arr.max()
         if mx <= mn:
-            return np.zeros_like(x)
-        return (x - mn) / (mx - mn)
+            return {k: 0.0 for k in x}
+        return {k: (v - mn) / (mx - mn + 1e-9) for k, v in x.items()}
+    print("3 Normalizing scores")
 
-    cf_n = normalize(cf_scores)
-    content_n = normalize(content_scores)
-    hybrid = alpha * cf_n + (1 - alpha) * content_n
+    cf_norm = norm(cf_dict)
+    content_norm = norm(content_scores)
+    print("Normalizing done")
 
-    seen = set(user_interactions["item_idx"].tolist())
-    for s in seen:
-        if 0 <= s < len(hybrid):
-            hybrid[int(s)] = -np.inf
+    # 4. Hybrid score
+    print("4 Calculating hybrid scores")
+    hybrid = {}
+    for item in set(cf_norm) | set(content_norm):
+        hybrid[item] = alpha * cf_norm.get(item, 0) + (1 - alpha) * content_norm.get(item, 0)
 
-    topn = min(topn, len(hybrid))
-    top_idx = np.argpartition(-hybrid, topn - 1)[:topn]
-    top_sorted = top_idx[np.argsort(-hybrid[top_idx])]
-    return [(item_idx_to_id[int(i)], float(hybrid[int(i)])) for i in top_sorted]
+    # 5. Sort
+    print("5 Sorting items")
+    top_items = sorted(hybrid.items(), key=lambda x: -x[1])[:topn]
 
-# caching
-_cached_artifacts = None
+    # 6. Enrich with metadata
+    print("6 Enriching with metadata")
+    enriched = []
+    for item_id, score in top_items:
+        row = item_meta[item_meta["item_id"] == item_id]
+        if row.empty:
+            continue
+        row = row.iloc[0]
 
-def get_artifacts():
-    global _cached_artifacts
-    if _cached_artifacts is None:
-        _cached_artifacts = load_artifacts()
-    return _cached_artifacts
+        enriched.append({
+            "item_id": item_id,
+            "item_code": row["itemCode"],
+            "item_name": row["name"],
+            "item_description": row["classValue_description"],
+            "score": float(score),
+        })
 
-def get_recommendations_for_user(user_id, topn=10, alpha=0.6):
-    artifacts = get_artifacts()
-    if artifacts.get("cf_model") is not None:
-        return get_hybrid_topn(user_id, topn, artifacts, alpha=alpha)
-    else:
-        return get_content_topn_by_user(user_id, topn, artifacts, exclude_seen=True)
+    return enriched

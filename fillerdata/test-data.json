@@ -1,165 +1,1109 @@
 {
-  "Countries": [
-    {"country_id": 1, "country_name": "Netherlands"},
-    {"country_id": 2, "country_name": "Germany"},
-    {"country_id": 3, "country_name": "Belgium"}
-  ],
   "Customers": [
-    {"customer_id": 1001, "addresses": "Fashion Store A", "country_id": 1},
-    {"customer_id": 1002, "addresses": "Sneaker Shop B", "country_id": 2},
-    {"customer_id": 1003, "addresses": "Urban Outfitters Plus", "country_id": 1},
-    {"customer_id": 1004, "addresses": "Premium Streetwear Co", "country_id": 3},
-    {"customer_id": 1005, "addresses": "Sporty Life Retail", "country_id": 2}
+    {
+      "customerGuid": "8a7b6c5d-4e3f-42a1-9c88-123456789abc",
+      "klantCode": 60635,
+      "name": "Primary Contact",
+      "contactFullName": "Lucas Hoek",
+      "addresses": [
+        {
+          "id": "3f1c2a9e-7b4c-4e8d-9b21-6a0f9e4c1234",
+          "city": "Amsterdam",
+          "state": "Noord-Holland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "1a2b3c4d-5e6f-47a8-9b01-111111111111",
+      "klantCode": 60636,
+      "name": "Acme BV",
+      "contactFullName": "Sanne de Vries",
+      "addresses": [
+        {
+          "id": "a1111111-2222-3333-4444-555555555555",
+          "city": "Rotterdam",
+          "state": "Zuid-Holland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "2b3c4d5e-6f7a-48b9-0c12-222222222222",
+      "klantCode": 60637,
+      "name": "Nordic Supplies",
+      "contactFullName": "Erik Jansen",
+      "addresses": [
+        {
+          "id": "b2222222-3333-4444-5555-666666666666",
+          "city": "Utrecht",
+          "state": "Utrecht"
+        }
+      ]
+    },
+    {
+      "customerGuid": "3c4d5e6f-7a8b-49c0-1d23-333333333333",
+      "klantCode": 60638,
+      "name": "TechPoint",
+      "contactFullName": "Maya van Dijk",
+      "addresses": [
+        {
+          "id": "c3333333-4444-5555-6666-777777777777",
+          "city": "Eindhoven",
+          "state": "Noord-Brabant"
+        }
+      ]
+    },
+    {
+      "customerGuid": "4d5e6f7a-8b9c-50d1-2e34-444444444444",
+      "klantCode": 60639,
+      "name": "GreenFields",
+      "contactFullName": "Pieter Groen",
+      "addresses": [
+        {
+          "id": "d4444444-5555-6666-7777-888888888888",
+          "city": "Groningen",
+          "state": "Groningen"
+        }
+      ]
+    },
+    {
+      "customerGuid": "5e6f7a8b-9c0d-51e2-3f45-555555555555",
+      "klantCode": 60640,
+      "name": "Harbor Logistics",
+      "contactFullName": "Fatima Alami",
+      "addresses": [
+        {
+          "id": "e5555555-6666-7777-8888-999999999999",
+          "city": "Schiedam",
+          "state": "Zuid-Holland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "6f7a8b9c-0d1e-52f3-4g56-666666666666",
+      "klantCode": 60641,
+      "name": "OfficeWorks",
+      "contactFullName": "Jeroen Maas",
+      "addresses": [
+        {
+          "id": "f6666666-7777-8888-9999-aaaaaaaaaaaa",
+          "city": "Haarlem",
+          "state": "Noord-Holland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "7a8b9c0d-1e2f-53g4-5h67-777777777777",
+      "klantCode": 60642,
+      "name": "Studio Nova",
+      "contactFullName": "Lotte Kramer",
+      "addresses": [
+        {
+          "id": "g7777777-8888-9999-aaaa-bbbbbbbbbbbb",
+          "city": "Leiden",
+          "state": "Zuid-Holland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "8b9c0d1e-2f3g-54h5-6i78-888888888888",
+      "klantCode": 60643,
+      "name": "MedicaPlus",
+      "contactFullName": "Dr. Hans Vermeer",
+      "addresses": [
+        {
+          "id": "h8888888-9999-aaaa-bbbb-cccccccccccc",
+          "city": "Maastricht",
+          "state": "Limburg"
+        }
+      ]
+    },
+    {
+      "customerGuid": "9c0d1e2f-3g4h-55i6-7j89-999999999999",
+      "klantCode": 60644,
+      "name": "EduSmart",
+      "contactFullName": "Anouk Peters",
+      "addresses": [
+        {
+          "id": "i9999999-aaaa-bbbb-cccc-dddddddddddd",
+          "city": "Delft",
+          "state": "Zuid-Holland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "0d1e2f3g-4h5i-56j7-8k90-aaaaaaaaaaaa",
+      "klantCode": 60645,
+      "name": "Cafe Central",
+      "contactFullName": "Ruben Bakker",
+      "addresses": [
+        {
+          "id": "jaaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+          "city": "Arnhem",
+          "state": "Gelderland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "1e2f3g4h-5i6j-57k8-9l01-bbbbbbbbbbbb",
+      "klantCode": 60646,
+      "name": "BuildIt",
+      "contactFullName": "Sofie van Leeuwen",
+      "addresses": [
+        {
+          "id": "kbbbbbbbb-cccc-dddd-eeee-ffffffffffff",
+          "city": "Tilburg",
+          "state": "Noord-Brabant"
+        }
+      ]
+    },
+    {
+      "customerGuid": "2f3g4h5i-6j7k-58l9-0m12-cccccccccccc",
+      "klantCode": 60647,
+      "name": "Bright Retail",
+      "contactFullName": "Mark de Groot",
+      "addresses": [
+        {
+          "id": "lcccccccc-dddd-eeee-ffff-111111111111",
+          "city": "Zwolle",
+          "state": "Overijssel"
+        }
+      ]
+    },
+    {
+      "customerGuid": "3g4h5i6j-7k8l-59m0-1n23-dddddddddddd",
+      "klantCode": 60648,
+      "name": "FreshFoods",
+      "contactFullName": "Iris van Dam",
+      "addresses": [
+        {
+          "id": "mdddddddd-eeee-ffff-1111-222222222222",
+          "city": "Breda",
+          "state": "Noord-Brabant"
+        }
+      ]
+    },
+    {
+      "customerGuid": "4h5i6j7k-8l9m-60n1-2o34-eeeeeeeeeeee",
+      "klantCode": 60649,
+      "name": "Eventive",
+      "contactFullName": "Tom van Rijn",
+      "addresses": [
+        {
+          "id": "neeeeeeee-ffff-1111-2222-333333333333",
+          "city": "Hengelo",
+          "state": "Overijssel"
+        }
+      ]
+    },
+    {
+      "customerGuid": "5i6j7k8l-9m0n-61o2-3p45-ffffffffffff",
+      "klantCode": 60650,
+      "name": "PrintWorks",
+      "contactFullName": "Nora Smits",
+      "addresses": [
+        {
+          "id": "offffffff-1111-2222-3333-444444444444",
+          "city": "Amersfoort",
+          "state": "Utrecht"
+        }
+      ]
+    },
+    {
+      "customerGuid": "6j7k8l9m-0n1o-62p3-4q56-111111111112",
+      "klantCode": 60651,
+      "name": "Solaris Energy",
+      "contactFullName": "Bram Kuiper",
+      "addresses": [
+        {
+          "id": "p1111111-2222-3333-4444-555555555556",
+          "city": "Leeuwarden",
+          "state": "Friesland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "7k8l9m0n-1o2p-63q4-5r67-222222222223",
+      "klantCode": 60652,
+      "name": "PetCare",
+      "contactFullName": "Eva Kort",
+      "addresses": [
+        {
+          "id": "q2222222-3333-4444-5555-666666666667",
+          "city": "Alkmaar",
+          "state": "Noord-Holland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "8l9m0n1o-2p3q-64r5-6s78-333333333334",
+      "klantCode": 60653,
+      "name": "Studio Pixel",
+      "contactFullName": "Rik van Houten",
+      "addresses": [
+        {
+          "id": "r3333333-4444-5555-6666-777777777778",
+          "city": "Haarlemmermeer",
+          "state": "Noord-Holland"
+        }
+      ]
+    },
+    {
+      "customerGuid": "9m0n1o2p-3q4r-65s6-7t89-444444444445",
+      "klantCode": 60654,
+      "name": "LogiTrans",
+      "contactFullName": "Sven Meijer",
+      "addresses": [
+        {
+          "id": "s4444444-5555-6666-7777-888888888889",
+          "city": "Venlo",
+          "state": "Limburg"
+        }
+      ]
+    },
+    {
+      "customerGuid": "0n1o2p3q-4r5s-66t7-8u90-555555555556",
+      "klantCode": 60655,
+      "name": "BlueWave",
+      "contactFullName": "Mila van der Berg",
+      "addresses": [
+        {
+          "id": "t5555555-6666-7777-8888-999999999990",
+          "city": "Den Helder",
+          "state": "Noord-Holland"
+        }
+      ]
+    }
   ],
   "Items": [
-    {"item_id": 1, "name": "T-Shirt Basic", "class_id": 10},
-    {"item_id": 2, "name": "Jeans Slim Fit", "class_id": 10},
-    {"item_id": 3, "name": "Sneakers White", "class_id": 20},
-    {"item_id": 4, "name": "Hoodie Oversized", "class_id": 10},
-    {"item_id": 5, "name": "Running Shoes Pro", "class_id": 20},
-    {"item_id": 6, "name": "Baseball Cap", "class_id": 30},
-    {"item_id": 7, "name": "Leather Jacket", "class_id": 40},
-    {"item_id": 8, "name": "Winter Coat", "class_id": 40},
-    {"item_id": 9, "name": "Tank Top", "class_id": 10},
-    {"item_id": 10, "name": "Cargo Pants", "class_id": 10},
-    {"item_id": 11, "name": "High-Top Sneakers", "class_id": 20},
-    {"item_id": 12, "name": "Slip-On Shoes", "class_id": 20},
-    {"item_id": 13, "name": "Graphic Tee", "class_id": 10},
-    {"item_id": 14, "name": "Track Jacket", "class_id": 40},
-    {"item_id": 15, "name": "Sport Shorts", "class_id": 30}
-  ],
-  "ItemClasses": [
-    {"class_id": 10, "class_name": "Clothing"},
-    {"class_id": 20, "class_name": "Shoes"},
-    {"class_id": 30, "class_name": "Accessories"},
-    {"class_id": 40, "class_name": "Outerwear"}
-  ],
-  "ItemClassValues": [
-    {"value_id": 101, "class_id": 10, "value_name": "Tops"},
-    {"value_id": 102, "class_id": 10, "value_name": "Bottoms"},
-    {"value_id": 103, "class_id": 10, "value_name": "Sportswear"},
-    {"value_id": 201, "class_id": 20, "value_name": "Sneakers"},
-    {"value_id": 202, "class_id": 20, "value_name": "Running Shoes"},
-    {"value_id": 301, "class_id": 30, "value_name": "Headwear"},
-    {"value_id": 401, "class_id": 40, "value_name": "Jackets"},
-    {"value_id": 402, "class_id": 40, "value_name": "Coats"}
-  ],
-  "MatrixHeaders": [
-    {"matrix_id": 1, "header_name": "Color"},
-    {"matrix_id": 2, "header_name": "Size"}
-  ],
-  "MatrixParents": [
-    {"parent_id": 1, "item_id": 1},
-    {"parent_id": 2, "item_id": 3},
-    {"parent_id": 3, "item_id": 4}
-  ],
-  "MatrixChildren": [
-    {"child_id": 1, "parent_id": 1, "variant_value": "Red"},
-    {"child_id": 2, "parent_id": 1, "variant_value": "Blue"},
-    {"child_id": 3, "parent_id": 2, "variant_value": "White"},
-    {"child_id": 4, "parent_id": 2, "variant_value": "Black"},
-    {"child_id": 5, "parent_id": 3, "variant_value": "Green"},
-    {"child_id": 6, "parent_id": 3, "variant_value": "Beige"}
-  ],
-  "UserFavoriteItems": [
-    {"user_id": 501, "item_id": 1},
-    {"user_id": 501, "item_id": 3},
-    {"user_id": 501, "item_id": 7},
-    {"user_id": 502, "item_id": 2},
-    {"user_id": 502, "item_id": 8},
-    {"user_id": 503, "item_id": 5},
-    {"user_id": 503, "item_id": 11},
-    {"user_id": 503, "item_id": 15},
-    {"user_id": 504, "item_id": 6},
-    {"user_id": 504, "item_id": 13},
-    {"user_id": 505, "item_id": 1},
-    {"user_id": 505, "item_id": 14},
-    {"user_id": 506, "item_id": 2},
-    {"user_id": 507, "item_id": 3},
-    {"user_id": 508, "item_id": 4},
-    {"user_id": 509, "item_id": 5},
-    {"user_id": 510, "item_id": 6},
-    {"user_id": 511, "item_id": 7},
-    {"user_id": 512, "item_id": 8},
-    {"user_id": 513, "item_id": 9},
-    {"user_id": 514, "item_id": 10},
-    {"user_id": 515, "item_id": 11},
-    {"user_id": 516, "item_id": 12},
-    {"user_id": 517, "item_id": 13},
-    {"user_id": 518, "item_id": 14},
-    {"user_id": 519, "item_id": 15},
-    {"user_id": 520, "item_id": 1}
-  ],
-  "Users": [
-    {"user_id": 501, "name": "SalesRep1"},
-    {"user_id": 502, "name": "SalesRep2"},
-    {"user_id": 503, "name": "SalesRep3"},
-    {"user_id": 504, "name": "SalesRep4"},
-    {"user_id": 505, "name": "SalesRep5"},
-    {"user_id": 506, "name": "SalesRep6"},
-    {"user_id": 507, "name": "SalesRep7"},
-    {"user_id": 508, "name": "SalesRep8"},
-    {"user_id": 509, "name": "SalesRep9"},
-    {"user_id": 510, "name": "SalesRep10"},
-    {"user_id": 511, "name": "SalesRep11"},
-    {"user_id": 512, "name": "SalesRep12"},
-    {"user_id": 513, "name": "SalesRep13"},
-    {"user_id": 514, "name": "SalesRep14"},
-    {"user_id": 515, "name": "SalesRep15"},
-    {"user_id": 516, "name": "SalesRep16"},
-    {"user_id": 517, "name": "SalesRep17"},
-    {"user_id": 518, "name": "SalesRep18"},
-    {"user_id": 519, "name": "SalesRep19"},
-    {"user_id": 520, "name": "SalesRep20"}
-  ],
-  "SalesReps": [
-    {"salesrep_id": 501, "customer_id": 1001},
-    {"salesrep_id": 502, "customer_id": 1002},
-    {"salesrep_id": 503, "customer_id": 1003},
-    {"salesrep_id": 504, "customer_id": 1004},
-    {"salesrep_id": 505, "customer_id": 1005},
-    {"salesrep_id": 506, "customer_id": 1001},
-    {"salesrep_id": 507, "customer_id": 1002},
-    {"salesrep_id": 508, "customer_id": 1003},
-    {"salesrep_id": 509, "customer_id": 1004},
-    {"salesrep_id": 510, "customer_id": 1005},
-    {"salesrep_id": 511, "customer_id": 1001},
-    {"salesrep_id": 512, "customer_id": 1002},
-    {"salesrep_id": 513, "customer_id": 1003},
-    {"salesrep_id": 514, "customer_id": 1004},
-    {"salesrep_id": 515, "customer_id": 1005},
-    {"salesrep_id": 516, "customer_id": 1001},
-    {"salesrep_id": 517, "customer_id": 1002},
-    {"salesrep_id": 518, "customer_id": 1003},
-    {"salesrep_id": 519, "customer_id": 1004},
-    {"salesrep_id": 520, "customer_id": 1005}
+    {
+      "itemCode": "KB-WL-ERG-001",
+      "unit": "pcs",
+      "lastAvailableStock": 125.5,
+      "searchDescription": "Wireless ergonomic keyboard",
+      "salesPrice": 79.99,
+      "catalogDescription": "Ergonomic Wireless Keyboard",
+      "description": "A comfortable, wireless ergonomic keyboard suitable for daily office use.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 10,
+        "description": "Electronics Accessories"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 10,
+          "description": "Electronics Accessories",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "KB-WL-ERG-002",
+      "unit": "pcs",
+      "lastAvailableStock": 200,
+      "searchDescription": "Compact wireless keyboard",
+      "salesPrice": 59.99,
+      "catalogDescription": "Compact Wireless Keyboard",
+      "description": "Slim compact wireless keyboard with rechargeable battery.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 10,
+        "description": "Electronics Accessories"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 10,
+          "description": "Electronics Accessories",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "MS-WL-MSE-003",
+      "unit": "pcs",
+      "lastAvailableStock": 340,
+      "searchDescription": "Wireless optical mouse",
+      "salesPrice": 29.5,
+      "catalogDescription": "Wireless Optical Mouse",
+      "description": "Ergonomic wireless mouse with adjustable DPI.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 11,
+        "description": "Computer Peripherals"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 11,
+          "description": "Computer Peripherals",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "HD-EXT-1TB-004",
+      "unit": "pcs",
+      "lastAvailableStock": 75,
+      "searchDescription": "1TB external hard drive",
+      "salesPrice": 89.99,
+      "catalogDescription": "External Hard Drive 1TB",
+      "description": "Portable 1TB external HDD with USB-C.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 12,
+        "description": "Storage Devices"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 12,
+          "description": "Storage Devices",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "HD-SSD-512-005",
+      "unit": "pcs",
+      "lastAvailableStock": 50,
+      "searchDescription": "512GB SSD",
+      "salesPrice": 129.99,
+      "catalogDescription": "Internal SSD 512GB",
+      "description": "High-speed 512GB SATA SSD for laptops and desktops.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 12,
+        "description": "Storage Devices"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 12,
+          "description": "Storage Devices",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "MON-24-006",
+      "unit": "pcs",
+      "lastAvailableStock": 40,
+      "searchDescription": "24 inch monitor",
+      "salesPrice": 159.99,
+      "catalogDescription": "24\" Full HD Monitor",
+      "description": "24 inch Full HD monitor with IPS panel.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 13,
+        "description": "Displays"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 13,
+          "description": "Displays",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "MON-27-007",
+      "unit": "pcs",
+      "lastAvailableStock": 25,
+      "searchDescription": "27 inch monitor",
+      "salesPrice": 249.99,
+      "catalogDescription": "27\" QHD Monitor",
+      "description": "27 inch QHD monitor with high color accuracy.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 13,
+        "description": "Displays"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 13,
+          "description": "Displays",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "KB-MECH-008",
+      "unit": "pcs",
+      "lastAvailableStock": 90,
+      "searchDescription": "Mechanical keyboard",
+      "salesPrice": 99.99,
+      "catalogDescription": "Mechanical Keyboard",
+      "description": "Mechanical keyboard with tactile switches.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 10,
+        "description": "Electronics Accessories"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 10,
+          "description": "Electronics Accessories",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "HDS-CASE-009",
+      "unit": "pcs",
+      "lastAvailableStock": 150,
+      "searchDescription": "Hard drive enclosure",
+      "salesPrice": 24.99,
+      "catalogDescription": "HDD/SSD Enclosure",
+      "description": "USB 3.1 enclosure for 2.5\" drives.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 12,
+        "description": "Storage Devices"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 12,
+          "description": "Storage Devices",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "CAM-1080P-010",
+      "unit": "pcs",
+      "lastAvailableStock": 60,
+      "searchDescription": "1080p webcam",
+      "salesPrice": 49.99,
+      "catalogDescription": "Full HD Webcam",
+      "description": "1080p webcam with built-in microphone.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 14,
+        "description": "Audio Video"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 14,
+          "description": "Audio Video",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "SPK-BT-011",
+      "unit": "pcs",
+      "lastAvailableStock": 120,
+      "searchDescription": "Bluetooth speaker",
+      "salesPrice": 39.99,
+      "catalogDescription": "Portable Bluetooth Speaker",
+      "description": "Compact Bluetooth speaker with 10h battery life.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 14,
+        "description": "Audio Video"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 14,
+          "description": "Audio Video",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "CABL-USB-C-012",
+      "unit": "pcs",
+      "lastAvailableStock": 500,
+      "searchDescription": "USB-C cable 1m",
+      "salesPrice": 7.99,
+      "catalogDescription": "USB-C Cable 1m",
+      "description": "Durable braided USB-C cable, 1 meter.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 15,
+        "description": "Cables"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 15,
+          "description": "Cables",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "CABL-HDMI-013",
+      "unit": "pcs",
+      "lastAvailableStock": 300,
+      "searchDescription": "HDMI cable 2m",
+      "salesPrice": 12.99,
+      "catalogDescription": "HDMI Cable 2m",
+      "description": "High-speed HDMI cable, 2 meters.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 15,
+        "description": "Cables"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 15,
+          "description": "Cables",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "ADP-USB-C-014",
+      "unit": "pcs",
+      "lastAvailableStock": 220,
+      "searchDescription": "USB-C adapter",
+      "salesPrice": 14.99,
+      "catalogDescription": "USB-C to USB-A Adapter",
+      "description": "Adapter for USB-C to USB-A connections.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 15,
+        "description": "Cables"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 15,
+          "description": "Cables",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "PRJ-PORT-015",
+      "unit": "pcs",
+      "lastAvailableStock": 18,
+      "searchDescription": "Portable projector",
+      "salesPrice": 399.99,
+      "catalogDescription": "Portable Mini Projector",
+      "description": "Compact projector for presentations and home cinema.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 14,
+        "description": "Audio Video"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 14,
+          "description": "Audio Video",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "UPS-600VA-016",
+      "unit": "pcs",
+      "lastAvailableStock": 35,
+      "searchDescription": "600VA UPS",
+      "salesPrice": 89.0,
+      "catalogDescription": "Uninterruptible Power Supply 600VA",
+      "description": "600VA UPS with surge protection and battery backup.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 16,
+        "description": "Power"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 16,
+          "description": "Power",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "CHG-65W-017",
+      "unit": "pcs",
+      "lastAvailableStock": 140,
+      "searchDescription": "65W USB-C charger",
+      "salesPrice": 34.99,
+      "catalogDescription": "65W USB-C Charger",
+      "description": "Fast charger with USB-C PD 65W output.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 16,
+        "description": "Power"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 16,
+          "description": "Power",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "STND-LAP-018",
+      "unit": "pcs",
+      "lastAvailableStock": 60,
+      "searchDescription": "Laptop stand",
+      "salesPrice": 27.5,
+      "catalogDescription": "Adjustable Laptop Stand",
+      "description": "Aluminum adjustable laptop stand for ergonomic setup.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 17,
+        "description": "Furniture"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 17,
+          "description": "Furniture",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "HED-ANC-019",
+      "unit": "pcs",
+      "lastAvailableStock": 85,
+      "searchDescription": "ANC headphones",
+      "salesPrice": 129.0,
+      "catalogDescription": "Active Noise Cancelling Headphones",
+      "description": "Over-ear headphones with active noise cancellation.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 14,
+        "description": "Audio Video"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 14,
+          "description": "Audio Video",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "CAM-4K-020",
+      "unit": "pcs",
+      "lastAvailableStock": 22,
+      "searchDescription": "4K webcam",
+      "salesPrice": 199.99,
+      "catalogDescription": "4K Ultra HD Webcam",
+      "description": "4K webcam for professional streaming and conferencing.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 14,
+        "description": "Audio Video"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 14,
+          "description": "Audio Video",
+          "sequence": 1
+        }
+      ]
+    },
+    {
+      "itemCode": "DOCK-THU-021",
+      "unit": "pcs",
+      "lastAvailableStock": 48,
+      "searchDescription": "Thunderbolt dock",
+      "salesPrice": 229.99,
+      "catalogDescription": "Thunderbolt 4 Docking Station",
+      "description": "Docking station with multiple ports and 100W PD.",
+      "minimumOrderQuantity": 1,
+      "isDeleted": false,
+      "itemClass": {
+        "itemClassId": 15,
+        "description": "Cables"
+      },
+      "itemClassValues": [
+        {
+          "itemClassId": 15,
+          "description": "Cables",
+          "sequence": 1
+        }
+      ]
+    }
   ],
   "Orders": [
-    {"order_id": 9001, "customer_id": 1001},
-    {"order_id": 9002, "customer_id": 1002},
-    {"order_id": 9003, "customer_id": 1001},
-    {"order_id": 9004, "customer_id": 1004},
-    {"order_id": 9005, "customer_id": 1003},
-    {"order_id": 9006, "customer_id": 1005},
-    {"order_id": 9007, "customer_id": 1002},
-    {"order_id": 9008, "customer_id": 1003}
-  ],
-  "OrderLines": [
-    {"orderline_id": 1, "order_id": 9001, "item_id": 1, "quantity": 3},
-    {"orderline_id": 2, "order_id": 9001, "item_id": 2, "quantity": 1},
-    {"orderline_id": 3, "order_id": 9002, "item_id": 3, "quantity": 2},
-    {"orderline_id": 4, "order_id": 9002, "item_id": 7, "quantity": 1},
-    {"orderline_id": 5, "order_id": 9003, "item_id": 4, "quantity": 4},
-    {"orderline_id": 6, "order_id": 9003, "item_id": 10, "quantity": 2},
-    {"orderline_id": 7, "order_id": 9004, "item_id": 11, "quantity": 1},
-    {"orderline_id": 8, "order_id": 9004, "item_id": 12, "quantity": 2},
-    {"orderline_id": 9, "order_id": 9005, "item_id": 5, "quantity": 3},
-    {"orderline_id": 10, "order_id": 9005, "item_id": 15, "quantity": 2},
-    {"orderline_id": 11, "order_id": 9006, "item_id": 9, "quantity": 1},
-    {"orderline_id": 12, "order_id": 9006, "item_id": 1, "quantity": 2},
-    {"orderline_id": 13, "order_id": 9007, "item_id": 13, "quantity": 1},
-    {"orderline_id": 14, "order_id": 9007, "item_id": 3, "quantity": 1},
-    {"orderline_id": 15, "order_id": 9008, "item_id": 8, "quantity": 2},
-    {"orderline_id": 16, "order_id": 9008, "item_id": 12, "quantity": 3}
+    {
+      "orderId": 24862,
+      "customerName": "John Doe",
+      "klantcode": 60635,
+      "orderDate": "2024-06-15T14:30:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-15T14:30:00Z",
+      "orderLines": [
+        {
+          "itemCode": "KB-WL-ERG-001",
+          "quantity": 2
+        },
+        {
+          "itemCode": "KB-WL-ERG-003",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "orderId": 24863,
+      "customerName": "Sanne de Vries",
+      "klantcode": 60636,
+      "orderDate": "2024-06-16T09:15:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-16T09:15:00Z",
+      "orderLines": [
+        {
+          "itemCode": "KB-WL-ERG-002",
+          "quantity": 5
+        },
+        {
+          "itemCode": "MS-WL-MSE-003",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "orderId": 24864,
+      "customerName": "Erik Jansen",
+      "klantcode": 60637,
+      "orderDate": "2024-06-16T11:00:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-16T11:00:00Z",
+      "orderLines": [
+        {
+          "itemCode": "HD-EXT-1TB-004",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "orderId": 24865,
+      "customerName": "Maya van Dijk",
+      "klantcode": 60638,
+      "orderDate": "2024-06-17T08:45:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-17T08:45:00Z",
+      "orderLines": [
+        {
+          "itemCode": "MON-24-006",
+          "quantity": 2
+        },
+        {
+          "itemCode": "CAM-1080P-010",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "orderId": 24866,
+      "customerName": "Pieter Groen",
+      "klantcode": 60639,
+      "orderDate": "2024-06-17T10:30:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-17T10:30:00Z",
+      "orderLines": [
+        {
+          "itemCode": "SPK-BT-011",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "orderId": 24867,
+      "customerName": "Fatima Alami",
+      "klantcode": 60640,
+      "orderDate": "2024-06-18T13:20:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-18T13:20:00Z",
+      "orderLines": [
+        {
+          "itemCode": "HDS-CASE-009",
+          "quantity": 20
+        },
+        {
+          "itemCode": "CABL-USB-C-012",
+          "quantity": 50
+        }
+      ]
+    },
+    {
+      "orderId": 24868,
+      "customerName": "Jeroen Maas",
+      "klantcode": 60641,
+      "orderDate": "2024-06-18T15:00:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-18T15:00:00Z",
+      "orderLines": [
+        {
+          "itemCode": "KB-MECH-008",
+          "quantity": 4
+        },
+        {
+          "itemCode": "STND-LAP-018",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "orderId": 24869,
+      "customerName": "Lotte Kramer",
+      "klantcode": 60642,
+      "orderDate": "2024-06-19T09:00:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-19T09:00:00Z",
+      "orderLines": [
+        {
+          "itemCode": "PRJ-PORT-015",
+          "quantity": 1
+        },
+        {
+          "itemCode": "DOCK-THU-021",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "orderId": 24870,
+      "customerName": "Dr. Hans Vermeer",
+      "klantcode": 60643,
+      "orderDate": "2024-06-19T11:30:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-19T11:30:00Z",
+      "orderLines": [
+        {
+          "itemCode": "HED-ANC-019",
+          "quantity": 2
+        },
+        {
+          "itemCode": "CAM-4K-020",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "orderId": 24871,
+      "customerName": "Anouk Peters",
+      "klantcode": 60644,
+      "orderDate": "2024-06-20T08:00:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-20T08:00:00Z",
+      "orderLines": [
+        {
+          "itemCode": "CHG-65W-017",
+          "quantity": 6
+        },
+        {
+          "itemCode": "CABL-HDMI-013",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "orderId": 24872,
+      "customerName": "Ruben Bakker",
+      "klantcode": 60645,
+      "orderDate": "2024-06-20T10:45:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-20T10:45:00Z",
+      "orderLines": [
+        {
+          "itemCode": "KB-WL-ERG-001",
+          "quantity": 3
+        },
+        {
+          "itemCode": "MS-WL-MSE-003",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "orderId": 24873,
+      "customerName": "Sofie van Leeuwen",
+      "klantcode": 60646,
+      "orderDate": "2024-06-21T09:30:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-21T09:30:00Z",
+      "orderLines": [
+        {
+          "itemCode": "HD-SSD-512-005",
+          "quantity": 2
+        },
+        {
+          "itemCode": "HDS-CASE-009",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "orderId": 24874,
+      "customerName": "Mark de Groot",
+      "klantcode": 60647,
+      "orderDate": "2024-06-21T14:10:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-21T14:10:00Z",
+      "orderLines": [
+        {
+          "itemCode": "SPK-BT-011",
+          "quantity": 8
+        },
+        {
+          "itemCode": "CABL-USB-C-012",
+          "quantity": 30
+        }
+      ]
+    },
+    {
+      "orderId": 24875,
+      "customerName": "Iris van Dam",
+      "klantcode": 60648,
+      "orderDate": "2024-06-22T07:50:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-22T07:50:00Z",
+      "orderLines": [
+        {
+          "itemCode": "HD-EXT-1TB-004",
+          "quantity": 1
+        },
+        {
+          "itemCode": "DOCK-THU-021",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "orderId": 24876,
+      "customerName": "Tom van Rijn",
+      "klantcode": 60649,
+      "orderDate": "2024-06-22T12:00:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-22T12:00:00Z",
+      "orderLines": [
+        {
+          "itemCode": "MON-27-007",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "orderId": 24877,
+      "customerName": "Nora Smits",
+      "klantcode": 60650,
+      "orderDate": "2024-06-23T09:40:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-23T09:40:00Z",
+      "orderLines": [
+        {
+          "itemCode": "PRJ-PORT-015",
+          "quantity": 2
+        },
+        {
+          "itemCode": "CABL-HDMI-013",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "orderId": 24878,
+      "customerName": "Bram Kuiper",
+      "klantcode": 60651,
+      "orderDate": "2024-06-23T11:15:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-23T11:15:00Z",
+      "orderLines": [
+        {
+          "itemCode": "UPS-600VA-016",
+          "quantity": 5
+        },
+        {
+          "itemCode": "CHG-65W-017",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "orderId": 24879,
+      "customerName": "Eva Kort",
+      "klantcode": 60652,
+      "orderDate": "2024-06-24T08:25:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-24T08:25:00Z",
+      "orderLines": [
+        {
+          "itemCode": "STND-LAP-018",
+          "quantity": 7
+        },
+        {
+          "itemCode": "KB-WL-ERG-002",
+          "quantity": 7
+        }
+      ]
+    },
+    {
+      "orderId": 24880,
+      "customerName": "Rik van Houten",
+      "klantcode": 60653,
+      "orderDate": "2024-06-24T10:55:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-24T10:55:00Z",
+      "orderLines": [
+        {
+          "itemCode": "CAM-4K-020",
+          "quantity": 1
+        },
+        {
+          "itemCode": "CAM-1080P-010",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "orderId": 24881,
+      "customerName": "Sven Meijer",
+      "klantcode": 60654,
+      "orderDate": "2024-06-25T09:05:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-25T09:05:00Z",
+      "orderLines": [
+        {
+          "itemCode": "DOCK-THU-021",
+          "quantity": 2
+        },
+        {
+          "itemCode": "HED-ANC-019",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "orderId": 24882,
+      "customerName": "Mila van der Berg",
+      "klantcode": 60655,
+      "orderDate": "2024-06-25T13:30:00Z",
+      "orderType": "Standard",
+      "created": "2024-06-25T13:30:00Z",
+      "orderLines": [
+        {
+          "itemCode": "CHG-65W-017",
+          "quantity": 2
+        },
+        {
+          "itemCode": "CABL-USB-C-012",
+          "quantity": 10
+        }
+      ]
+    }
   ]
 }

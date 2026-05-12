@@ -2,81 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Sales Reps</title>
+  <title>Customers</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     body { font-family: Arial, Helvetica, sans-serif; margin: 24px; }
-    .list { max-width: 420px; padding: 0; margin: 0; list-style: none; border:1px solid #e6e6e6; border-radius:6px; overflow:hidden; }
-    .list li { padding: 12px 16px; border-bottom: 1px solid #f2f2f2; background:#fff; }
+    .list { max-width: 720px; padding: 0; margin: 0; list-style: none; border:1px solid #e6e6e6; border-radius:6px; overflow:hidden; }
+    .list li { padding: 12px 16px; border-bottom: 1px solid #f2f2f2; background:#fff; display:flex; flex-direction:column; gap:6px; }
     .list li:last-child { border-bottom: none; }
-    .list a { color: #1a73e8; text-decoration: none; display:block; width:100%; }
+    .list a { color: #1a73e8; text-decoration: none; display:inline-block; }
     .list a:hover { background:#f6f9ff; }
     h3 { margin-bottom: 8px; }
     .small { color:#666; font-size:0.9rem; margin-bottom:12px; }
-    .meta { color:#444; font-size:0.95rem; margin-top:6px; }
+    .meta { color:#444; font-size:0.95rem; margin-top:6px; display:flex; gap:12px; flex-wrap:wrap; }
+    .meta span { color:#666; font-size:0.9rem; }
+    .addr { color:#666; font-size:0.9rem; }
+    .empty { padding:16px; color:#666; }
   </style>
 </head>
 <body>
-  <h3>Sales Reps</h3>
-  <p class="small">Click a sales rep to open the advice page. Data is loaded from <code>/api/data</code>.</p>
+  <h3>Customers</h3>
+  <p class="small">Click a customer to open the customer page. Data is loaded from <code>/api/data</code>.</p>
 
-  <ul id="salesrep-list" class="list" aria-label="Sales rep list">
-    <li>Loading…</li>
+  <ul id="customer-list" class="list" aria-label="Customer list">
+    <li class="empty">Loading…</li>
   </ul>
 
   <script>
-    async function renderSalesReps() {
+    async function renderCustomers() {
       try {
         const res = await fetch('/api/data');
         if (!res.ok) throw new Error('Failed to fetch data');
         const data = await res.json();
 
-        // Prefer using SalesReps from JSON; if missing, fall back to IDs 500..520
-        const reps = (data.SalesReps && data.SalesReps.length)
-          ? data.SalesReps.map(s => ({ id: s.salesrep_id, customer_id: s.customer_id }))
-          : Array.from({length:21}, (_,i) => ({ id: 500 + i, customer_id: '' }));
+        const customers = Array.isArray(data.Customers) ? data.Customers : [];
 
-        // Remove duplicates and sort by id
-        const unique = [];
-        const seen = new Set();
-        reps.forEach(r => {
-          if (!seen.has(r.id)) {
-            seen.add(r.id);
-            unique.push(r);
-          }
+        // Sort customers by klantCode if present, otherwise by name
+        customers.sort((a, b) => {
+          const aCode = (a.klantCode !== undefined && a.klantCode !== null) ? a.klantCode : Number.MAX_SAFE_INTEGER;
+          const bCode = (b.klantCode !== undefined && b.klantCode !== null) ? b.klantCode : Number.MAX_SAFE_INTEGER;
+          if (aCode !== bCode) return aCode - bCode;
+          const aName = (a.name || '').toLowerCase();
+          const bName = (b.name || '').toLowerCase();
+          return aName.localeCompare(bName);
         });
-        unique.sort((a,b) => a.id - b.id);
 
-        const ul = document.getElementById('salesrep-list');
+        const ul = document.getElementById('customer-list');
         ul.innerHTML = '';
 
-        unique.forEach(r => {
+        if (customers.length === 0) {
+          ul.innerHTML = '<li class="empty">No customers found.</li>';
+          return;
+        }
+        customers.forEach(c => {
           const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.href = '/customeradvice?salesrep=' + encodeURIComponent(r.id);
-          a.textContent = 'Sales Rep ' + r.id;
-          a.setAttribute('aria-label', 'Open advice for sales rep ' + r.id);
 
+          // Primary link / title
+          const titleLink = document.createElement('a');
+          const idForUrl = c.klantCode !== undefined && c.klantCode !== null ? c.klantCode : encodeURIComponent(c.customerGuid || '');
+          titleLink.href = '/customeradvice?klantcode=' + idForUrl;          
+          titleLink.textContent = c.name || ('Customer ' + (c.klantCode || c.customerGuid || ''));
+          titleLink.setAttribute('aria-label', 'Open customer ' + (c.name || idForUrl));
+          li.appendChild(titleLink);
+
+          // Contact name and identifiers
           const meta = document.createElement('div');
           meta.className = 'meta';
-          meta.textContent = r.customer_id ? 'Assigned customer: ' + r.customer_id : 'No assigned customer';
 
-          li.appendChild(a);
+          const contact = document.createElement('span');
+          contact.textContent = 'Contact: ' + (c.contactFullName || '—');
+          meta.appendChild(contact);
+
+
           li.appendChild(meta);
+
+          // Address (first address if available)
+          const addr = document.createElement('div');
+          addr.className = 'addr';
+          if (Array.isArray(c.addresses) && c.addresses.length > 0) {
+            const a0 = c.addresses[0];
+            const parts = [];
+            if (a0.city) parts.push(a0.city);
+            if (a0.state) parts.push(a0.state);
+            addr.textContent = parts.length ? parts.join(' · ') : 'Address: —';
+          } else {
+            addr.textContent = 'Address: —';
+          }
+          li.appendChild(addr);
           ul.appendChild(li);
         });
-
-        if (unique.length === 0) {
-          ul.innerHTML = '<li>No sales reps found.</li>';
-        }
       } catch (err) {
-        const ul = document.getElementById('salesrep-list');
-        ul.innerHTML = '<li>Error loading sales reps: ' + err.message + '</li>';
+        const ul = document.getElementById('customer-list');
+        ul.innerHTML = '<li class="empty">Error loading customers: ' + err.message + '</li>';
         console.error(err);
       }
     }
 
-    renderSalesReps();
+    renderCustomers();
   </script>
 </body>
 </html>
