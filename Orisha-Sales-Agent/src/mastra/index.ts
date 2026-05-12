@@ -11,7 +11,7 @@ import { toolCallAppropriatenessScorer, completenessScorer, translationScorer } 
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
-  agents: { weatherAgent },
+  agents: { salesAgent},
   scorers: { toolCallAppropriatenessScorer, completenessScorer, translationScorer },
   storage: new MastraCompositeStore({
     id: 'composite-storage',
