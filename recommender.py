@@ -181,7 +181,7 @@ def get_hybrid_topn(user_id, topn, artifacts, alpha=0.6):
         enriched.append({
             "item_id": item_id,
             "item_code": row["itemCode"],
-            "item_name": row["name"],
+            "item_name": row["catalogDescription"],
             "item_description": row["classValue_description"],
             "score": float(score),
         })
