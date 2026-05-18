@@ -1,47 +1,35 @@
 import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
-import { weatherTool } from '../tools/weather-tool';
-import { scorers } from '../scorers/weather-scorer';
+import { salesTool } from '../tools/sales-tool'; 
+import { scorers } from '../scorers/sales-scorer';
 
 export const salesAgent = new Agent({
   id: 'sales-agent',
   name: 'Sales Agent',
-  instructions: `You are a helpful sales assistant that provides accurate product information and can help customers make informed purchasing decisions.
+  instructions: `You are a helpful sales assistant that helps sales representatives get the recommended item list details for specific customers. When responding:
+- Always ask for a customer ID if none is provided.
+- If the customer ID isn't in the correct format, ask for it again.
+- Include relevant details like product names, prices, and availability.
+- Keep responses concise but informative.
 
-Your primary function is to help users get weather details for specific locations. When responding:
-- Always ask for a location if none is provided
-- If the location name isn't in English, please translate it
-- If giving a location with multiple parts (e.g. "New York, NY"), use the most relevant part (e.g. "New York")
-- Include relevant details like humidity, wind conditions, and precipitation
-- Keep responses concise but informative
-- If the user asks for activities and provides the weather forecast, suggest activities based on the weather forecast.
-- If the user asks for activities, respond in the format they request.
-
-Use the weatherTool to fetch current weather data.`,
+Use the salesTool (id: get-advice) to fetch the current top 5 recommended items for a given klantcode.`,
   model: 'google/gemini-2.5-pro',
-  tools: { weatherTool },
+  tools: { salesTool }, // provide the tool object here
   scorers: {
     toolCallAppropriateness: {
       scorer: scorers.toolCallAppropriatenessScorer,
-      sampling: {
-        type: 'ratio',
-        rate: 1,
-      },
+      sampling: { type: 'ratio', rate: 1 },
     },
     completeness: {
       scorer: scorers.completenessScorer,
-      sampling: {
-        type: 'ratio',
-        rate: 1,
-      },
+      sampling: { type: 'ratio', rate: 1 },
     },
     translation: {
       scorer: scorers.translationScorer,
-      sampling: {
-        type: 'ratio',
-        rate: 1,
-      },
+      sampling: { type: 'ratio', rate: 1 },
     },
   },
   memory: new Memory(),
 });
+
+export default salesAgent;

@@ -49,6 +49,23 @@ def customer_advice():
         results=results
     )
 
+@app.route("/api/customeradvice", methods=["GET"])
+def customer_advice_api():
+    klantcode = request.args.get("klantcode")
+    if not klantcode:
+        return {"error": "Missing klantcode"}, 400
+
+    klantcode = int(klantcode)
+
+    results = get_hybrid_topn(
+        klantcode,
+        topn=5,
+        artifacts=artifacts
+    )
+
+    return {"klantcode": klantcode, "results": results}
+
+
 @app.route("/favicon.ico")
 def favicon():
     fav = Path(app.static_folder) / "favicon.ico"

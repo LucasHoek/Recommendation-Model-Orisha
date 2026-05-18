@@ -20,7 +20,7 @@ export const translationScorer = createScorer({
   judge: {
     model: 'google/gemini-2.5-pro',
     instructions:
-      'You are an expert evaluator of translation quality for geographic locations. ' +
+      'You are an expert evaluator of translation quality for advise. ' +
       'Determine whether the user text mentions a non-English location and whether the assistant correctly uses an English translation of that location. ' +
       'Be lenient with transliteration differences and diacritics. ' +
       'Return only the structured JSON matching the provided schema.',
@@ -32,7 +32,7 @@ export const translationScorer = createScorer({
     return { userText, assistantText };
   })
   .analyze({
-    description: 'Extract location names and detect language/translation adequacy',
+    description: 'Extract products and detect language/translation adequacy',
     outputSchema: z.object({
       nonEnglish: z.boolean(),
       translated: z.boolean(),
@@ -40,7 +40,7 @@ export const translationScorer = createScorer({
       explanation: z.string().default(''),
     }),
     createPrompt: ({ results }) => `
-            You are evaluating if a weather assistant correctly handled translation of a non-English location.
+            You are evaluating if a sales assistant correctly handled translation of a non-English product name.
             User text:
             """
             ${results.preprocessStepResult.userText}
@@ -50,8 +50,8 @@ export const translationScorer = createScorer({
             ${results.preprocessStepResult.assistantText}
             """
             Tasks:
-            1) Identify if the user mentioned a location that appears non-English.
-            2) If non-English, check whether the assistant used a correct English translation of that location in its response.
+            1) Identify if the user mentioned a product that appears non-English.
+            2) If non-English, check whether the assistant used a correct English translation of that product in its response.
             3) Be lenient with transliteration differences (e.g., accents/diacritics).
             Return JSON with fields:
             {
