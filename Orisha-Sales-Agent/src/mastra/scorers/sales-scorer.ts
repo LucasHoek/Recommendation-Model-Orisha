@@ -18,7 +18,7 @@ export const translationScorer = createScorer({
   description: 'Checks that non-English location names are translated and used correctly',
   type: 'agent',
   judge: {
-    model: 'google/gemini-2.5-pro',
+    model: 'google/gemini-2.5-`flash`',
     instructions:
       'You are an expert evaluator of translation quality for advise. ' +
       'Determine whether the user text mentions a non-English location and whether the assistant correctly uses an English translation of that location. ' +
