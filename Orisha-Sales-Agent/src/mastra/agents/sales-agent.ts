@@ -51,7 +51,7 @@ Use the salesTool (id: get-advice) to fetch the current top 5 recommended items 
 
 
 
-  model: 'google/gemini-2.5-pro',
+  model: 'google/gemini-2.5-flash',
   tools: { salesTool },
   scorers: {
     toolCallAppropriateness: {
