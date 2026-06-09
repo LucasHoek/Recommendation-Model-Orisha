@@ -1,13 +1,31 @@
 # Recommendation model
 (Lucas Hoek - 220216) - 23/04/2026 
 In deze branch bevindt zich de uiteindelijke prototype van het Recommendation model. Dit model is ontwikkeld 
-In totaal bestaat het recommendation model uit twee onderdelen: 
-### 1: het trainingsproces (Train.py)
-Het trainingsproces is het proces van ophalen, trainen van een model en het uiteindelijk opslaan van een functioneel model dat voorspellingen kan maken. 
-### 2: het recommendation model (Recommendation.py)
-Hierin bevindt zich het proces van het ontvangen van een request om een aanbeveling te maken en het terugsturen van een ranglijst van producten. 
+In totaal bestaat uit meerdere onderdelen: 
+### 1: de Mastra applicatie (Orisha-sales-agent)
+deze folder beheert de TypeScript code om te zorgen dat de Mastra Agent functioneert. Bevat ook een brug naar de code om de tool te laten functioneren.
+### 2: het recommendation tool (Recommender.py)
+Hierin bevindt zich de tool waarmee de LLM-chatbot mee communiceert. Het maakt gebruik van de aritfacts files en AI-model om een top 5 lijst te creëren van een gegeven klanten-id.
 
+### 3: artifacts & ncf_model.onnx
+Deze twee bestanden zijn nodig om te functioneren. Het bevat de getrainde twee modellen om een aanbeveling aan te maken. Mocht deze bestanden niet aanwezig zijn kan er een nieuwe set aan bestanden door het bestand `example-generated.ipynb` te runnen. 
 
+### 4: environments.yaml
+Dit bestand defineert de omgeving waarin gewerkt wordt om het project te laten functioneren. het bevat informatie waaronder: 
+- De python versie dat gebruik is
+- De afhankelijkheden (dependencies)
+
+Voor dit project is conda gebruikt voor het beheren van omgevingen. Om de environment aan te maken, gebruik de volgende code: 
+```
+conda env create -f environments.yaml
+conda activate agent
+```
+
+### 5: requirements.txt
+dit bestand bevat alle python libraries die gebruikt zijn. Om deze te installeren gebruik je de volgende code:
+```
+pip install -r requirements.txt
+```
 
 
 ## Proces en Methodieken
