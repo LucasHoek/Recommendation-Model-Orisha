@@ -1,0 +1,16 @@
+name: orisha-recommendation-model
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - numpy=1.24.3
+  - scipy=1.11.2
+  - joblib=1.3.2
+  - pandas=2.0.3
+  - scikit-learn=1.3.1
+  - pip
+  - pip::Flask==2.3.3
+  - pip::onnxruntime==1.16.3
+variables:
+  PYTHONPATH: .
