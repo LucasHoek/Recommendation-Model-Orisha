@@ -32,7 +32,6 @@ async function getAdvice(klantcode: string) {
 
   // If the JSON endpoint is not available, try the HTML endpoint and attempt to extract JSON
   if (!resp.ok) {
-    // fallback to the existing HTML route (if your Flask renders a page)
     const htmlUrl = `/customeradvice?klantcode=${encodeURIComponent(klantcode)}`;
     resp = await fetch(htmlUrl, {
       method: 'GET',
@@ -46,10 +45,6 @@ async function getAdvice(klantcode: string) {
     }
 
     const html = await resp.text();
-
-    // Attempt to extract JSON embedded in the HTML.
-    // This is a best-effort fallback: if your template embeds the results as JSON
-    // inside a <script id="results-json">...</script> block, we can parse it.
     const markerStart = '<script id="results-json" type="application/json">';
     const markerEnd = '</script>';
     const startIdx = html.indexOf(markerStart);
@@ -68,20 +63,17 @@ async function getAdvice(klantcode: string) {
       }
     }
 
-    // If no embedded JSON found, instruct the developer to expose a JSON endpoint.
     throw new Error(
       'No JSON response found. Please expose a JSON API at /api/customeradvice?klantcode=... ' +
       'or embed results JSON in the HTML inside <script id="results-json" type="application/json">...</script>.'
     );
   }
 
-  // Parse JSON response from the API endpoint
   const data = await resp.json();
   validateAndReturn(data);
   return data;
 }
 
-/** Validate the shape of the response using the tool's output schema */
 function validateAndReturn(data: unknown) {
   const schema = z.object({
     results: z.array(
