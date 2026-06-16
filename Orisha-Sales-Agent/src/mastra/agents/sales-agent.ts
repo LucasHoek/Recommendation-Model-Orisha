@@ -5,11 +5,9 @@ import { scorers } from '../scorers/sales-scorer';
 
 
 // api key check
-const rawKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY || '';
-const apiKey = rawKey.trim();
-
+const apiKey = process.env.GOOGLE_API_KEY?.trim();
 if (!apiKey) {
-  console.error('Missing API key: check GOOGLE_API_KEY or GEMINI_API_KEY environment variable.');
+  console.error('Missing GOOGLE_API_KEY environment variable.');
   process.exit(1);
 }
 
@@ -44,8 +42,6 @@ Bij het berekenen van de uiteindelijke score wordt er een parameter gegeven die 
 Uiteindelijk worden de aanbevelingen terug gestuurd naar de sales agent, waarbij er samen met deze informatie een uiteindelijke response gemaakt kan worden.
 Mocht de gebruiker de vraag stellen hoe de aanbevelingen tot stand zijn gekomen, leg dan het bovenstaande proces uit in eenvoudige bewoordingen dat begrijpenlijk is voor een sales medewerker zonder technische achtergrond. 
 Use the salesTool (id: get-advice) to fetch the current top 5 recommended items for a given klantcode.
-
-
 `,
 
 

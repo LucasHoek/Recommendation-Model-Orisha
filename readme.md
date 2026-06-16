@@ -10,22 +10,44 @@ Hierin bevindt zich de tool waarmee de LLM-chatbot mee communiceert. Het maakt g
 ### 3: artifacts & ncf_model.onnx
 Deze twee bestanden zijn nodig om te functioneren. Het bevat de getrainde twee modellen om een aanbeveling aan te maken. Mocht deze bestanden niet aanwezig zijn kan er een nieuwe set aan bestanden door het bestand `example-generated.ipynb` te runnen. 
 
-### 4: environments.yaml
+
+### 1: environments.yaml
 Dit bestand defineert de omgeving waarin gewerkt wordt om het project te laten functioneren. het bevat informatie waaronder: 
 - De python versie dat gebruik is
 - De afhankelijkheden (dependencies)
 
-Voor dit project is conda gebruikt voor het beheren van omgevingen. Om de environment aan te maken, gebruik de volgende code: 
+Voor dit project is conda gebruikt voor het beheren van omgevingen. Om de environment aan te maken en te gebruiken, gebruik de volgende code: 
 ```
 conda env create -f environments.yaml
-conda activate agent
+conda activate orisha-recommendation-model
 ```
-
-### 5: requirements.txt
+### 2: requirements.txt
 dit bestand bevat alle python libraries die gebruikt zijn. Om deze te installeren gebruik je de volgende code:
 ```
 pip install -r requirements.txt
 ```
+### 3: Mastra
+Mastra is het Typescript framework dat gebruikt is voor de sales agent. Dit moet apart geïnstalleerd worden. Om mastra te installeren, voer de volgende code uit in de nieuwe environment: 
+```
+cd Orisha-Sales-Agent
+```
+en voer daarna uit: 
+```
+npm install mastra
+```
+navigeer daarna uit de folder met 
+```
+cd..
+```
+
+### 4: Code
+om de code uit te voeren is een .bat bestand aangemaakt. om de code te starten gebruik je de volgende code:
+```
+run.bat
+```
+vervolgens kan de sales agent getest worden op de volgende pagina: `http://localhost:4111/agents/sales-agent `
+op deze pagina kan ook de tool getest worden.
+Om een visuele front end te zien hoe het concept functioneel werkt, bekijk de volgende pagin: `http://localhost:5000/` 
 
 
 ## Proces en Methodieken

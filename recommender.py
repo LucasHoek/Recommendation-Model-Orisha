@@ -6,9 +6,7 @@ from sklearn.metrics.pairwise import linear_kernel
 import onnxruntime as ort
 
 
-# ---------------------------------------------------------
-# Load all artifacts (ONCE at startup)
-# ---------------------------------------------------------
+# Load all artifacts 
 def load_artifacts(artifacts_dir, onnx_providers=None):
     if onnx_providers is None:
         onnx_providers = ["CPUExecutionProvider"]
@@ -45,9 +43,7 @@ def load_artifacts(artifacts_dir, onnx_providers=None):
     }
 
 
-# ---------------------------------------------------------
 # Collaborative filtering scoring
-# ---------------------------------------------------------
 def cf_scores_for_user(user_idx, cf_session, item_indices):
     user_array = np.full((len(item_indices), 1), user_idx, dtype=np.int32)
     item_array = item_indices.reshape(-1, 1).astype(np.int32)
@@ -95,9 +91,7 @@ def get_cf_topn(user_id, topn, artifacts, exclude_seen=True):
     return [(int(i), float(scores[int(i)])) for i in top_idx]
 
 
-# ---------------------------------------------------------
 # Content-based similarity
-# ---------------------------------------------------------
 def get_content_topn_by_item(item_id, topn, artifacts):
     item_encoder = artifacts["item_encoder"]
     tfidf_matrix = artifacts["tfidf_matrix"]
@@ -116,9 +110,7 @@ def get_content_topn_by_item(item_id, topn, artifacts):
     return list(zip(item_ids, sims[top_idx]))
 
 
-# ---------------------------------------------------------
 # Hybrid recommender
-# ---------------------------------------------------------
 def get_hybrid_topn(user_id, topn, artifacts, alpha=0.6):
     user_encoder = artifacts["user_encoder"]
     item_encoder = artifacts["item_encoder"]
@@ -129,23 +121,19 @@ def get_hybrid_topn(user_id, topn, artifacts, alpha=0.6):
 
     if user_id not in user_encoder.classes_:
         return []
-    print("1 CF score")
     # 1. CF scores
     cf = get_cf_topn(user_id, topn=500, artifacts=artifacts, exclude_seen=True)
     cf_dict = {i: s for i, s in cf}
-    print("CF scores calculated")
+    
     # 2. Content-based expansion
     content_scores = {}
-    print("2 Content-based")
     for item_id, cf_score in cf:
         sims = get_content_topn_by_item(item_id, topn=20, artifacts=artifacts)
         for sim_item, sim_score in sims:
             content_scores[sim_item] = content_scores.get(sim_item, 0) + sim_score
-    print("CF generated")
 
     # 3. Normalization helper
     def norm(x):
-        print("Normalizing scores")
         if not x:
             return {}
         arr = np.array(list(x.values()), dtype=np.float32)
@@ -153,24 +141,19 @@ def get_hybrid_topn(user_id, topn, artifacts, alpha=0.6):
         if mx <= mn:
             return {k: 0.0 for k in x}
         return {k: (v - mn) / (mx - mn + 1e-9) for k, v in x.items()}
-    print("3 Normalizing scores")
 
     cf_norm = norm(cf_dict)
     content_norm = norm(content_scores)
-    print("Normalizing done")
 
     # 4. Hybrid score
-    print("4 Calculating hybrid scores")
     hybrid = {}
     for item in set(cf_norm) | set(content_norm):
         hybrid[item] = alpha * cf_norm.get(item, 0) + (1 - alpha) * content_norm.get(item, 0)
 
     # 5. Sort
-    print("5 Sorting items")
     top_items = sorted(hybrid.items(), key=lambda x: -x[1])[:topn]
 
     # 6. Enrich with metadata
-    print("6 Enriching with metadata")
     enriched = []
     for item_id, score in top_items:
         row = item_meta[item_meta["item_id"] == item_id]
