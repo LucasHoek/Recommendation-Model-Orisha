@@ -47,7 +47,7 @@ cd..
 
 ### 5: Environment variables en Google Key
 Er is een Google API key gebruikt voor de chatbot. Om te zorgen dat de code kan functioneren moet er een .env bestand aangemaakt worden als deze nog niet aanwezig is.  Mocht deze key nog niet aanwezig zijn, volgt hieronder hoe de .env bestand eruit moet zien.
-```` 
+```
 # add API key after the =
 GOOGLE_API_KEY = 
 #mastra internally needs to check GOOGLE_GENERATIVE_AI_API_KEY for the API key, so we set it to the same value as GOOGLE_API_KEY
